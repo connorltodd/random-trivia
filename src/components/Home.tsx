@@ -1,7 +1,9 @@
 import React from "react";
 import axios from "axios";
 
-export interface IGameCategories {
+import { GameContext } from "../contexts/GameContext";
+
+interface IGameCategories {
   id: number;
   name: string;
 }
@@ -11,6 +13,7 @@ function Home() {
   const [selectedGameCategoryId, setSelectedGameCategoryId] = React.useState<number>(0);
   const [selectedDifficulty, setSelectedDifficulty] = React.useState<string>("easy");
 
+  const { setGameQuestions } = React.useContext(GameContext);
   React.useEffect(() => {
     getGameCategories();
   }, []);
@@ -28,7 +31,7 @@ function Home() {
         `https://opentdb.com/api.php?amount=10&category=${selectedGameCategoryId}&type=multiple&difficulty=${selectedDifficulty}`
       )
       .then((response) => {
-        console.log(response);
+        setGameQuestions(response.data.results);
       });
   };
 
@@ -41,13 +44,13 @@ function Home() {
         setSelectedGameCategoryId(Number(event.target.value))
       }>
         {gameCategories.map((gameCategory) => (
-          <option value={gameCategory.id}>{gameCategory.name}</option>
+          <option key={gameCategory.id} value={gameCategory.id}>{gameCategory.name}</option>
         ))}
       </select>
       {/* Difficulty dropdown */}
       <select onChange={(event: React.ChangeEvent<HTMLSelectElement>) => setSelectedDifficulty(event.target.value)}>
         {["easy", "medium", "hard"].map((difficulty) => (
-          <option value={difficulty}>{difficulty}</option>
+          <option key={difficulty} value={difficulty}>{difficulty}</option>
         ))}
       </select>
       <p>SelectedGame: {selectedGameCategoryId}</p>
