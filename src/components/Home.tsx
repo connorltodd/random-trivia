@@ -1,4 +1,5 @@
 import React from "react";
+import { History } from 'history';
 import axios from "axios";
 
 import { GameContext } from "../contexts/GameContext";
@@ -8,7 +9,11 @@ interface IGameCategories {
   name: string;
 }
 
-function Home() {
+interface ChildComponentProps {
+  history : History
+}
+
+const Home : React.SFC<ChildComponentProps> = ({ history }) => {
   const [gameCategories, setGameCategories] = React.useState<IGameCategories[]>([]);
   const [selectedGameCategoryId, setSelectedGameCategoryId] = React.useState<number>(0);
   const [selectedDifficulty, setSelectedDifficulty] = React.useState<string>("easy");
@@ -32,6 +37,7 @@ function Home() {
       )
       .then((response) => {
         setGameQuestions(response.data.results);
+        history.push("/game")
       });
   };
 
