@@ -8,16 +8,16 @@ import Result from "./components/Result";
 function App() {
   return (
     <div className="App">
-      <GameContextProvider>
-        <BrowserRouter>
+      <BrowserRouter>
+        <GameContextProvider>
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/game" component={Game} />
             <Route path="/result" component={Result} />
             <Redirect to="/" />
           </Switch>
-        </BrowserRouter>
-      </GameContextProvider>
+        </GameContextProvider>
+      </BrowserRouter>
     </div>
   );
 }
