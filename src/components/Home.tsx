@@ -18,10 +18,19 @@ const Home : React.SFC<ChildComponentProps> = ({ history }) => {
   const [selectedGameCategoryId, setSelectedGameCategoryId] = React.useState<number>(0);
   const [selectedDifficulty, setSelectedDifficulty] = React.useState<string>("easy");
 
-  const { setGameQuestions } = React.useContext(GameContext);
+  const { setGameQuestions,setCurrentQuestionId, setPoints  } = React.useContext(GameContext);
   React.useEffect(() => {
     getGameCategories();
+    removePreviousGame();
   }, []);
+
+  const removePreviousGame = () => {
+    window.localStorage.removeItem('currentPoints');
+    setPoints(0);
+    window.localStorage.removeItem('currentQuestion');
+    setCurrentQuestionId(0);
+    window.localStorage.removeItem('gameQuestions');
+  }
 
   const getGameCategories = () => {
     axios.get("https://opentdb.com/api_category.php").then((response) => {
@@ -36,6 +45,7 @@ const Home : React.SFC<ChildComponentProps> = ({ history }) => {
         `https://opentdb.com/api.php?amount=10&category=${selectedGameCategoryId}&type=multiple&difficulty=${selectedDifficulty}`
       )
       .then((response) => {
+        window.localStorage.setItem('gameQuestions', JSON.stringify(response.data.results))
         setGameQuestions(response.data.results);
         history.push("/game")
       });
@@ -59,7 +69,6 @@ const Home : React.SFC<ChildComponentProps> = ({ history }) => {
           <option key={difficulty} value={difficulty}>{difficulty}</option>
         ))}
       </select>
-      <p>SelectedGame: {selectedGameCategoryId}</p>
       <p>Home</p>
       <button onClick={getGameInfo}>Confirm Game Choice</button>
     </div>
