@@ -1,6 +1,7 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { History } from 'history';
+import { gameQuestionsArray, currentPoints, currentQuestion } from "../helpers/data";
 
 
 interface Props {
@@ -20,21 +21,25 @@ interface ContextProps {
 
 export const GameContext = React.createContext({} as ContextProps);
 
-const GameContextProvider: React.FC<Props> = ({ children, history
- }) => {
-    const [gameQuestions, setGameQuestions] = React.useState([]);
-    const [points, setPoints] = React.useState(0);
-    const [currentQuestionId, setCurrentQuestionId] = React.useState(0)
 
+const GameContextProvider: React.FC<Props> = ({ children, history }) => {
+
+    const [gameQuestions, setGameQuestions] = React.useState(gameQuestionsArray || []);
+    const [points, setPoints] = React.useState(currentPoints || 0);
+    const [currentQuestionId, setCurrentQuestionId] = React.useState(currentQuestion || 0)
+
+    React.useEffect(() => { console.log({ gameQuestionsArray, currentPoints, currentQuestion })})
     const testUserAnswer = (userAnswer: string, correctAnswer: string) => {
       if(userAnswer === correctAnswer) {
         setPoints(points + 10)
+        window.localStorage.setItem('currentPoints', JSON.stringify(points + 10))
       }
 
       if(currentQuestionId === 9) {
         history.push("/result")
       } else {
         setCurrentQuestionId(currentQuestionId + 1)
+        window.localStorage.setItem('currentQuestion', JSON.stringify(currentQuestionId + 1))
       }
     }
 

@@ -19,7 +19,7 @@ const Result: React.SFC<ChildComponentProps> = ({ history }) =>  {
      <p>Result</p>
      <p>Your score was {points}</p>
      <p>You scored {points / 10} out of 10</p>
-    {gameQuestions.map((gameQuestion: any, index) => (
+    {gameQuestions.map((gameQuestion: any, index: number) => (
       <div key={index}>
         <p>{parse(gameQuestion.question)}</p>
         {createAnswersList(gameQuestion.incorrect_answers, gameQuestion.correct_answer)
